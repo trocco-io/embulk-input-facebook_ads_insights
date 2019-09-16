@@ -2,56 +2,29 @@ package org.embulk.input.facebook_ads_insights;
 
 import java.util.List;
 
-import com.google.common.base.Optional;
-
-import org.embulk.config.Config;
-import org.embulk.config.ConfigDefault;
+import com.facebook.ads.sdk.APIException;
+import com.facebook.ads.sdk.AdsInsights;
 import org.embulk.config.ConfigDiff;
 import org.embulk.config.ConfigSource;
-import org.embulk.config.Task;
 import org.embulk.config.TaskReport;
 import org.embulk.config.TaskSource;
-import org.embulk.spi.Exec;
-import org.embulk.spi.InputPlugin;
-import org.embulk.spi.PageOutput;
-import org.embulk.spi.Schema;
-import org.embulk.spi.SchemaConfig;
+import org.embulk.exec.ExecutionInterruptedException;
+import org.embulk.spi.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FacebookAdsInsightsInputPlugin
         implements InputPlugin
 {
-    public interface PluginTask
-            extends Task
-    {
-        // configuration option 1 (required integer)
-        @Config("option1")
-        public int getOption1();
-
-        // configuration option 2 (optional string, null is not allowed)
-        @Config("option2")
-        @ConfigDefault("\"myvalue\"")
-        public String getOption2();
-
-        // configuration option 3 (optional string, null is allowed)
-        @Config("option3")
-        @ConfigDefault("null")
-        public Optional<String> getOption3();
-
-        // if you get schema from config
-        @Config("columns")
-        public SchemaConfig getColumns();
-    }
+    private final Logger logger =  LoggerFactory.getLogger(FacebookAdsInsightsInputPlugin.class);
 
     @Override
     public ConfigDiff transaction(ConfigSource config,
             InputPlugin.Control control)
     {
         PluginTask task = config.loadConfig(PluginTask.class);
-
-        Schema schema = task.getColumns().toSchema();
-        int taskCount = 1;  // number of run() method calls
-
-        return resume(task.dump(), schema, taskCount, control);
+        Schema schema = task.getFields().toSchema();
+        return resume(task.dump(), schema, 1, control);
     }
 
     @Override
@@ -76,9 +49,21 @@ public class FacebookAdsInsightsInputPlugin
             PageOutput output)
     {
         PluginTask task = taskSource.loadTask(PluginTask.class);
-
-        // Write your code here :)
-        throw new UnsupportedOperationException("FacebookAdsInsightsInputPlugin.run method is not implemented yet");
+        try {
+            try (PageBuilder pageBuilder = new PageBuilder(Exec.getBufferAllocator(), schema, output)) {
+                Client client = new Client(task);
+                List<AdsInsights> insights = client.getInsights();
+                for (AdsInsights insight : insights) {
+                    schema.visitColumns(new FacebookAdsInsightsColumnVisitor(insight, pageBuilder));
+                    pageBuilder.addRecord();
+                }
+                pageBuilder.finish();
+            }
+        } catch (APIException e) {
+            logger.error(e.getMessage(), e);
+            throw new ExecutionInterruptedException(e);
+        }
+        return Exec.newTaskReport();
     }
 
     @Override

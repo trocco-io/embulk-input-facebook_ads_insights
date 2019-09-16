@@ -21,6 +21,7 @@ targetCompatibility = 1.8
 dependencies {
     compile  "org.embulk:embulk-core:0.9.17"
     provided "org.embulk:embulk-core:0.9.17"
+    compile group: "com.facebook.business.sdk", name: "facebook-java-business-sdk", version: "4.0.5"
     // compile "YOUR_JAR_DEPENDENCY_GROUP:YOUR_JAR_DEPENDENCY_MODULE:YOUR_JAR_DEPENDENCY_VERSION"
     testCompile "junit:junit:4.+"
 }
