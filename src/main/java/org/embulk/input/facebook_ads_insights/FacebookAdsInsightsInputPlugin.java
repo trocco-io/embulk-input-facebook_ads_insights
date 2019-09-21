@@ -1,7 +1,5 @@
 package org.embulk.input.facebook_ads_insights;
 
-import java.util.List;
-
 import com.facebook.ads.sdk.APIException;
 import com.facebook.ads.sdk.AdsInsights;
 import org.embulk.config.ConfigDiff;
@@ -9,9 +7,15 @@ import org.embulk.config.ConfigSource;
 import org.embulk.config.TaskReport;
 import org.embulk.config.TaskSource;
 import org.embulk.exec.ExecutionInterruptedException;
-import org.embulk.spi.*;
+import org.embulk.spi.Exec;
+import org.embulk.spi.InputPlugin;
+import org.embulk.spi.PageBuilder;
+import org.embulk.spi.PageOutput;
+import org.embulk.spi.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class FacebookAdsInsightsInputPlugin
         implements InputPlugin
@@ -59,7 +63,8 @@ public class FacebookAdsInsightsInputPlugin
                 }
                 pageBuilder.finish();
             }
-        } catch (APIException e) {
+        }
+        catch (APIException e) {
             logger.error(e.getMessage(), e);
             throw new ExecutionInterruptedException(e);
         }
