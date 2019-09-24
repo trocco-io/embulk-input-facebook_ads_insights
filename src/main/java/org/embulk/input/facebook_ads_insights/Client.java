@@ -5,6 +5,7 @@ import com.facebook.ads.sdk.APIException;
 import com.facebook.ads.sdk.APINodeList;
 import com.facebook.ads.sdk.Ad;
 import com.facebook.ads.sdk.AdAccount;
+import com.facebook.ads.sdk.AdReportRun;
 import com.facebook.ads.sdk.AdSet;
 import com.facebook.ads.sdk.AdsInsights;
 import com.facebook.ads.sdk.Campaign;
@@ -31,21 +32,31 @@ public class Client
         this.pluginTask = pluginTask;
     }
 
-    public APINodeList<AdsInsights> getInsights() throws APIException
+    public APINodeList<AdsInsights> getInsights() throws APIException, InterruptedException
     {
+        AdReportRun adReportRun;
         switch (pluginTask.getObjectType()) {
-            case ACCOUNT: return getAdAccountInsights();
-            case CAMPAIGN: return getCampaignInsights();
-            case ADSET: return getAdSetInsights();
-            case AD: return getAdInsights();
+            case ACCOUNT: adReportRun = getAdAccountInsights(); break;
+            case CAMPAIGN: adReportRun = getCampaignInsights(); break;
+            case ADSET: adReportRun = getAdSetInsights(); break;
+            case AD: adReportRun = getAdInsights(); break;
             default: throw new APIException();
         }
+        while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                logger.error("Thread interrupted from sleep while waiting for async insights");
+                throw e;
+            }
+        }
+        return adReportRun.getInsights().execute();
     }
 
     // TODO: plz make me dry
-    private APINodeList<AdsInsights> getAdAccountInsights() throws APIException
+    private AdReportRun getAdAccountInsights() throws APIException
     {
-        AdAccount.APIRequestGetInsights request = new AdAccount(pluginTask.getObjectId(), apiContext()).getInsights();
+        AdAccount.APIRequestGetInsightsAsync request = new AdAccount(pluginTask.getObjectId(), apiContext()).getInsightsAsync();
         request.setFields(fieldNames());
         if (pluginTask.getActionAttributionWindows().isPresent()) {
             request.setActionAttributionWindows(pluginTask.getActionAttributionWindows().get().stream().map(ActionAttributionWindow::getEnum).collect(Collectors.toList()));
@@ -86,9 +97,9 @@ public class Client
         return request.execute();
     }
 
-    private APINodeList<AdsInsights> getCampaignInsights() throws APIException
+    private AdReportRun getCampaignInsights() throws APIException
     {
-        Campaign.APIRequestGetInsights request = new Campaign(pluginTask.getObjectId(), apiContext()).getInsights();
+        Campaign.APIRequestGetInsightsAsync request = new Campaign(pluginTask.getObjectId(), apiContext()).getInsightsAsync();
         request.setFields(fieldNames());
         if (pluginTask.getActionAttributionWindows().isPresent()) {
             request.setActionAttributionWindows(pluginTask.getActionAttributionWindows().get().stream().map(ActionAttributionWindow::getEnum).collect(Collectors.toList()));
@@ -129,9 +140,9 @@ public class Client
         return request.execute();
     }
 
-    private APINodeList<AdsInsights> getAdSetInsights() throws APIException
+    private AdReportRun getAdSetInsights() throws APIException
     {
-        AdSet.APIRequestGetInsights request = new AdSet(pluginTask.getObjectId(), apiContext()).getInsights();
+        AdSet.APIRequestGetInsightsAsync request = new AdSet(pluginTask.getObjectId(), apiContext()).getInsightsAsync();
         request.setFields(fieldNames());
         if (pluginTask.getActionAttributionWindows().isPresent()) {
             request.setActionAttributionWindows(pluginTask.getActionAttributionWindows().get().stream().map(ActionAttributionWindow::getEnum).collect(Collectors.toList()));
@@ -172,9 +183,9 @@ public class Client
         return request.execute();
     }
 
-    private APINodeList<AdsInsights> getAdInsights() throws APIException
+    private AdReportRun getAdInsights() throws APIException
     {
-        Ad.APIRequestGetInsights request = new Ad(pluginTask.getObjectId(), apiContext()).getInsights();
+        Ad.APIRequestGetInsightsAsync request = new Ad(pluginTask.getObjectId(), apiContext()).getInsightsAsync();
         request.setFields(fieldNames());
         if (pluginTask.getActionAttributionWindows().isPresent()) {
             request.setActionAttributionWindows(pluginTask.getActionAttributionWindows().get().stream().map(ActionAttributionWindow::getEnum).collect(Collectors.toList()));

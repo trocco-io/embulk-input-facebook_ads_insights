@@ -64,7 +64,7 @@ public class FacebookAdsInsightsInputPlugin
                 pageBuilder.finish();
             }
         }
-        catch (APIException e) {
+        catch (APIException | InterruptedException e) {
             logger.error(e.getMessage(), e);
             throw new ExecutionInterruptedException(e);
         }
