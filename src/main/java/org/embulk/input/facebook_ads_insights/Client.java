@@ -9,12 +9,10 @@ import com.facebook.ads.sdk.AdReportRun;
 import com.facebook.ads.sdk.AdSet;
 import com.facebook.ads.sdk.AdsInsights;
 import com.facebook.ads.sdk.Campaign;
-import com.google.gson.Gson;
 import org.embulk.input.facebook_ads_insights.model.ActionAttributionWindow;
 import org.embulk.input.facebook_ads_insights.model.ActionBreakdown;
 import org.embulk.input.facebook_ads_insights.model.Breakdown;
 import org.embulk.spi.ColumnConfig;
-import org.embulk.spi.unit.ToStringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +22,7 @@ import java.util.stream.Collectors;
 public class Client
 {
     private final Logger logger =  LoggerFactory.getLogger(Client.class);
+    private static final int ASYNC_SLEEP_TIME = 3000;
 
     private final PluginTask pluginTask;
 
@@ -36,19 +35,26 @@ public class Client
     {
         AdReportRun adReportRun;
         switch (pluginTask.getObjectType()) {
-            case ACCOUNT: adReportRun = getAdAccountInsights(); break;
-            case CAMPAIGN: adReportRun = getCampaignInsights(); break;
-            case ADSET: adReportRun = getAdSetInsights(); break;
-            case AD: adReportRun = getAdInsights(); break;
-            default: throw new APIException();
+            case ACCOUNT: {
+                adReportRun = getAdAccountInsights();
+                break;
+            }
+            case CAMPAIGN: {
+                adReportRun = getCampaignInsights();
+                break;
+            }
+            case ADSET: {
+                adReportRun = getAdSetInsights();
+                break;
+            }
+            case AD: {
+                adReportRun = getAdInsights();
+                break;
+            }
+            default: throw new IllegalArgumentException();
         }
         while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                logger.error("Thread interrupted from sleep while waiting for async insights");
-                throw e;
-            }
+            Thread.sleep(ASYNC_SLEEP_TIME);
         }
         return adReportRun.getInsights().execute();
     }
@@ -74,7 +80,7 @@ public class Client
             request.setDatePreset(pluginTask.getDatePreset().get().getEnum());
         }
         if (pluginTask.getFiltering().isPresent()) {
-            request.setTimeRanges(stringifyToStringMaps(pluginTask.getFiltering().get()));
+            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
         }
         if (pluginTask.getLevel().isPresent()) {
             request.setLevel(pluginTask.getLevel().get().getEnum());
@@ -89,7 +95,7 @@ public class Client
             request.setTimeIncrement(pluginTask.getTimeIncrement().get());
         }
         if (pluginTask.getTimeRanges().isPresent()) {
-            request.setTimeRanges(stringifyToStringMaps(pluginTask.getTimeRanges().get()));
+            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getTimeRanges().get()));
         }
         if (pluginTask.getUseAccountAttributionSetting().isPresent()) {
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
@@ -117,7 +123,7 @@ public class Client
             request.setDatePreset(pluginTask.getDatePreset().get().getEnum());
         }
         if (pluginTask.getFiltering().isPresent()) {
-            request.setTimeRanges(stringifyToStringMaps(pluginTask.getFiltering().get()));
+            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
         }
         if (pluginTask.getLevel().isPresent()) {
             request.setLevel(pluginTask.getLevel().get().getEnum());
@@ -132,7 +138,7 @@ public class Client
             request.setTimeIncrement(pluginTask.getTimeIncrement().get());
         }
         if (pluginTask.getTimeRanges().isPresent()) {
-            request.setTimeRanges(stringifyToStringMaps(pluginTask.getTimeRanges().get()));
+            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getTimeRanges().get()));
         }
         if (pluginTask.getUseAccountAttributionSetting().isPresent()) {
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
@@ -160,7 +166,7 @@ public class Client
             request.setDatePreset(pluginTask.getDatePreset().get().getEnum());
         }
         if (pluginTask.getFiltering().isPresent()) {
-            request.setTimeRanges(stringifyToStringMaps(pluginTask.getFiltering().get()));
+            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
         }
         if (pluginTask.getLevel().isPresent()) {
             request.setLevel(pluginTask.getLevel().get().getEnum());
@@ -175,7 +181,7 @@ public class Client
             request.setTimeIncrement(pluginTask.getTimeIncrement().get());
         }
         if (pluginTask.getTimeRanges().isPresent()) {
-            request.setTimeRanges(stringifyToStringMaps(pluginTask.getTimeRanges().get()));
+            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getTimeRanges().get()));
         }
         if (pluginTask.getUseAccountAttributionSetting().isPresent()) {
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
@@ -203,7 +209,7 @@ public class Client
             request.setDatePreset(pluginTask.getDatePreset().get().getEnum());
         }
         if (pluginTask.getFiltering().isPresent()) {
-            request.setTimeRanges(stringifyToStringMaps(pluginTask.getFiltering().get()));
+            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
         }
         if (pluginTask.getLevel().isPresent()) {
             request.setLevel(pluginTask.getLevel().get().getEnum());
@@ -218,7 +224,7 @@ public class Client
             request.setTimeIncrement(pluginTask.getTimeIncrement().get());
         }
         if (pluginTask.getTimeRanges().isPresent()) {
-            request.setTimeRanges(stringifyToStringMaps(pluginTask.getTimeRanges().get()));
+            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getTimeRanges().get()));
         }
         if (pluginTask.getUseAccountAttributionSetting().isPresent()) {
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
@@ -233,10 +239,5 @@ public class Client
     private List<String> fieldNames()
     {
         return pluginTask.getFields().getColumns().stream().map(ColumnConfig::getName).filter(s -> !Breakdown.NAMES.contains(s)).collect(Collectors.toList());
-    }
-    private String stringifyToStringMaps(List<ToStringMap> value)
-    {
-        Gson gson = new Gson();
-        return "[" + value.stream().map(gson::toJson).collect(Collectors.joining(",")) + "]";
     }
 }
