@@ -83,7 +83,7 @@ Gem::Specification.new do |spec|
   spec.description   = %[Loads records from Facebook Ads Insights.]
   spec.email         = ["n.nakane0219@gmail.com"]
   spec.licenses      = ["MIT"]
-  # TODO set this: spec.homepage      = "https://github.com/n.nakane0219/embulk-input-facebook_ads_insights"
+  spec.homepage      = "https://github.com/trocco-io/embulk-input-facebook_ads_insights"
 
   spec.files         = `git ls-files`.split("\n") + Dir["classpath/*.jar"]
   spec.test_files    = spec.files.grep(%r"^(test|spec)/")
