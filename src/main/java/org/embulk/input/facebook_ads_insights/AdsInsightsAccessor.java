@@ -144,6 +144,6 @@ public class AdsInsightsAccessor
     private String extractBreakdown(String name)
     {
         JsonElement data = this.adsInsights.getRawResponseAsJsonObject().get(name);
-        return data.isJsonNull() ? "" : data.toString();
+        return data.isJsonNull() ? "" : data.getAsString();
     }
 }
