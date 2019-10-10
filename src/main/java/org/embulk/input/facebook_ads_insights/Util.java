@@ -15,4 +15,9 @@ public class Util
         Gson gson = new Gson();
         return "[" + value.stream().map(gson::toJson).collect(Collectors.joining(",")) + "]";
     }
+    public static String stringifyToStringMap(ToStringMap value)
+    {
+        Gson gson = new Gson();
+        return gson.toJson(value);
+    }
 }

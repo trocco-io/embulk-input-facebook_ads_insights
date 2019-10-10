@@ -29,6 +29,7 @@ Required Embulk version >= 0.9
 | product_id_limit                | no       | integer                                                          | see [product_id_limit](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details.                |
 | sort                            | no       | array(string)                                                    | see [sort](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details.                            |
 | time_increment                  | no       | enum{monthly, all_days} or integer(1-90)                         | see [time_increment](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details.                  |
+| time_range                      | no       | {since:YYYY-MM-DD, until:YYYY-MM-DD}                             | see [time_range](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details.                      |
 | time_ranges                     | no       | array({since:YYYY-MM-DD, until:YYYY-MM-DD})                      | see [time_ranges](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details.                     |
 | use_account_attribution_setting | no       | boolean                                                          | see [use_account_attribution_setting](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details. |
 

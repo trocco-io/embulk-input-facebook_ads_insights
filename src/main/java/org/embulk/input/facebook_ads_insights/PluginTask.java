@@ -70,6 +70,10 @@ public interface PluginTask extends Task
     @ConfigDefault("null")
     public Optional<String> getTimeIncrement();
 
+    @Config("time_range")
+    @ConfigDefault("null")
+    public Optional<ToStringMap> getTimeRange();
+
     @Config("time_ranges")
     @ConfigDefault("null")
     public Optional<List<ToStringMap>> getTimeRanges();

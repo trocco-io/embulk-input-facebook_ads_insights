@@ -94,6 +94,9 @@ public class Client
         if (pluginTask.getTimeIncrement().isPresent()) {
             request.setTimeIncrement(pluginTask.getTimeIncrement().get());
         }
+        if (pluginTask.getTimeRange().isPresent()) {
+            request.setTimeRange(Util.stringifyToStringMap(pluginTask.getTimeRange().get()));
+        }
         if (pluginTask.getTimeRanges().isPresent()) {
             request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getTimeRanges().get()));
         }
@@ -136,6 +139,9 @@ public class Client
         }
         if (pluginTask.getTimeIncrement().isPresent()) {
             request.setTimeIncrement(pluginTask.getTimeIncrement().get());
+        }
+        if (pluginTask.getTimeRange().isPresent()) {
+            request.setTimeRange(Util.stringifyToStringMap(pluginTask.getTimeRange().get()));
         }
         if (pluginTask.getTimeRanges().isPresent()) {
             request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getTimeRanges().get()));
@@ -180,6 +186,9 @@ public class Client
         if (pluginTask.getTimeIncrement().isPresent()) {
             request.setTimeIncrement(pluginTask.getTimeIncrement().get());
         }
+        if (pluginTask.getTimeRange().isPresent()) {
+            request.setTimeRange(Util.stringifyToStringMap(pluginTask.getTimeRange().get()));
+        }
         if (pluginTask.getTimeRanges().isPresent()) {
             request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getTimeRanges().get()));
         }
@@ -222,6 +231,9 @@ public class Client
         }
         if (pluginTask.getTimeIncrement().isPresent()) {
             request.setTimeIncrement(pluginTask.getTimeIncrement().get());
+        }
+        if (pluginTask.getTimeRange().isPresent()) {
+            request.setTimeRange(Util.stringifyToStringMap(pluginTask.getTimeRange().get()));
         }
         if (pluginTask.getTimeRanges().isPresent()) {
             request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getTimeRanges().get()));
