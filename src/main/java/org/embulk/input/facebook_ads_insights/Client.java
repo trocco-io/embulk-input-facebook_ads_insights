@@ -80,7 +80,7 @@ public class Client
             request.setDatePreset(pluginTask.getDatePreset().get().getEnum());
         }
         if (pluginTask.getFiltering().isPresent()) {
-            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
+            request.setFiltering(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
         }
         if (pluginTask.getLevel().isPresent()) {
             request.setLevel(pluginTask.getLevel().get().getEnum());
@@ -123,7 +123,7 @@ public class Client
             request.setDatePreset(pluginTask.getDatePreset().get().getEnum());
         }
         if (pluginTask.getFiltering().isPresent()) {
-            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
+            request.setFiltering(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
         }
         if (pluginTask.getLevel().isPresent()) {
             request.setLevel(pluginTask.getLevel().get().getEnum());
@@ -166,7 +166,7 @@ public class Client
             request.setDatePreset(pluginTask.getDatePreset().get().getEnum());
         }
         if (pluginTask.getFiltering().isPresent()) {
-            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
+            request.setFiltering(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
         }
         if (pluginTask.getLevel().isPresent()) {
             request.setLevel(pluginTask.getLevel().get().getEnum());
@@ -209,7 +209,7 @@ public class Client
             request.setDatePreset(pluginTask.getDatePreset().get().getEnum());
         }
         if (pluginTask.getFiltering().isPresent()) {
-            request.setTimeRanges(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
+            request.setFiltering(Util.stringifyToStringMaps(pluginTask.getFiltering().get()));
         }
         if (pluginTask.getLevel().isPresent()) {
             request.setLevel(pluginTask.getLevel().get().getEnum());
