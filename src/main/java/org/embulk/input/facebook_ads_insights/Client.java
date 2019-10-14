@@ -248,11 +248,11 @@ public class Client
 
     private List<AdsInsights> fetchAllPage(APINodeList<AdsInsights> adsInsights) throws APIException
     {
-        List<AdsInsights> result = new ArrayList<>(adsInsights);
+        List<AdsInsights> result = new ArrayList<>();
         APINodeList<AdsInsights> next = adsInsights;
-        while (!(next = next.nextPage()).isEmpty())
-        {
+        while (!next.isEmpty()) {
             result.addAll(next);
+            next = next.nextPage();
         }
         return result;
     }
