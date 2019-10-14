@@ -32,7 +32,7 @@ public class Client
         this.pluginTask = pluginTask;
     }
 
-    public List<AdsInsights> getInsights() throws APIException, InterruptedException
+    public List<AdsInsights> getInsights(boolean isPaginationValid) throws APIException, InterruptedException
     {
         AdReportRun adReportRun;
         switch (pluginTask.getObjectType()) {
@@ -58,7 +58,7 @@ public class Client
             Thread.sleep(ASYNC_SLEEP_TIME);
         }
         APINodeList<AdsInsights> adsInsights = adReportRun.getInsights().execute();
-        return fetchAllPage(adsInsights);
+        return isPaginationValid ? fetchAllPage(adsInsights) : adsInsights;
     }
 
     // TODO: plz make me dry
