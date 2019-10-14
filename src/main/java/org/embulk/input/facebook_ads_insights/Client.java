@@ -16,6 +16,7 @@ import org.embulk.spi.ColumnConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class Client
         this.pluginTask = pluginTask;
     }
 
-    public APINodeList<AdsInsights> getInsights() throws APIException, InterruptedException
+    public List<AdsInsights> getInsights() throws APIException, InterruptedException
     {
         AdReportRun adReportRun;
         switch (pluginTask.getObjectType()) {
@@ -56,7 +57,8 @@ public class Client
         while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
             Thread.sleep(ASYNC_SLEEP_TIME);
         }
-        return adReportRun.getInsights().execute();
+        APINodeList<AdsInsights> adsInsights = adReportRun.getInsights().execute();
+        return fetchAllPage(adsInsights);
     }
 
     // TODO: plz make me dry
@@ -242,6 +244,17 @@ public class Client
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
         }
         return request.execute();
+    }
+
+    private List<AdsInsights> fetchAllPage(APINodeList<AdsInsights> adsInsights) throws APIException
+    {
+        List<AdsInsights> result = new ArrayList<>(adsInsights);
+        APINodeList<AdsInsights> next = adsInsights;
+        while (!(next = next.nextPage()).isEmpty())
+        {
+            result.addAll(next);
+        }
+        return result;
     }
 
     private APIContext apiContext()
