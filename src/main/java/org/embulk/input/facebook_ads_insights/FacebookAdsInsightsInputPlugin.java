@@ -56,7 +56,7 @@ public class FacebookAdsInsightsInputPlugin
         try {
             try (PageBuilder pageBuilder = new PageBuilder(Exec.getBufferAllocator(), schema, output)) {
                 Client client = new Client(task);
-                List<AdsInsights> insights = client.getInsights();
+                List<AdsInsights> insights = client.getInsights(!Exec.isPreview());
                 for (AdsInsights insight : insights) {
                     schema.visitColumns(new FacebookAdsInsightsColumnVisitor(insight, pageBuilder, task));
                     pageBuilder.addRecord();
