@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Client
@@ -57,7 +58,23 @@ public class Client
         while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
             Thread.sleep(ASYNC_SLEEP_TIME);
         }
-        APINodeList<AdsInsights> adsInsights = adReportRun.getInsights().execute();
+        // extra waiting
+        int retryCount = 0;
+        boolean succeeded = false;
+        APINodeList<AdsInsights> adsInsights = null;
+        while (retryCount < pluginTask.getMaxWeightSeconds() && !succeeded) {
+            try {
+                Thread.sleep(1000);
+                adsInsights = adReportRun.getInsights().execute();
+                succeeded = true;
+            }
+            catch (APIException e) {
+                retryCount++;
+            }
+        }
+        if (Objects.isNull(adsInsights)) {
+            throw new APIException();
+        }
         return isPaginationValid ? fetchAllPage(adsInsights) : adsInsights;
     }
 

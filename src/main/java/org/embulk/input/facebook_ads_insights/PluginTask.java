@@ -81,4 +81,8 @@ public interface PluginTask extends Task
     @Config("use_account_attribution_setting")
     @ConfigDefault("null")
     public Optional<Boolean> getUseAccountAttributionSetting();
+
+    @Config("max_wait_seconds")
+    @ConfigDefault("60")
+    public Integer getMaxWeightSeconds();
 }
