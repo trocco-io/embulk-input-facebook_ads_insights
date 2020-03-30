@@ -25,7 +25,6 @@ public class ActionBreakdown
     public static ActionBreakdown fromString(final String value)
     {
         switch (value) {
-            case "action_converted_product_id": return new ActionBreakdown(AdsInsights.EnumActionBreakdowns.VALUE_ACTION_CONVERTED_PRODUCT_ID);
             case "action_device": return new ActionBreakdown(AdsInsights.EnumActionBreakdowns.VALUE_ACTION_DEVICE);
             case "action_canvas_component_name": return new ActionBreakdown(AdsInsights.EnumActionBreakdowns.VALUE_ACTION_CANVAS_COMPONENT_NAME);
             case "action_carousel_card_id": return new ActionBreakdown(AdsInsights.EnumActionBreakdowns.VALUE_ACTION_CAROUSEL_CARD_ID);
