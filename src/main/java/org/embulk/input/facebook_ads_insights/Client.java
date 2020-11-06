@@ -55,9 +55,12 @@ public class Client
             }
             default: throw new IllegalArgumentException();
         }
+        logger.info(adReportRun.getRawResponse());
         while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
+            logger.info(adReportRun.getRawResponse());
             Thread.sleep(ASYNC_SLEEP_TIME);
         }
+        logger.info(adReportRun.getRawResponse());
         // extra waiting
         int retryCount = 0;
         boolean succeeded = false;
