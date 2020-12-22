@@ -69,7 +69,7 @@ public class Client
                 succeeded = true;
             }
             catch (APIException e) {
-                retryCount++;
+                if (!adReportRun.getFieldAsyncStatus().equals("Job Skipped")) retryCount++;
             }
         }
         if (Objects.isNull(adsInsights)) {
