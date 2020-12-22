@@ -66,10 +66,11 @@ public class Client
             try {
                 Thread.sleep(1000);
                 adsInsights = adReportRun.getInsights().execute();
+                if (adReportRun != null && !adReportRun.getFieldAsyncStatus().equals("Job Skipped")) throw new RuntimeException();
                 succeeded = true;
             }
             catch (APIException e) {
-                if (!adReportRun.getFieldAsyncStatus().equals("Job Skipped")) retryCount++;
+                retryCount++;
             }
         }
         if (Objects.isNull(adsInsights)) {
