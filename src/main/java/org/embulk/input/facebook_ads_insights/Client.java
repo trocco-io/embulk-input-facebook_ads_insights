@@ -66,10 +66,13 @@ public class Client
             try {
                 Thread.sleep(1000);
                 adsInsights = adReportRun.getInsights().execute();
-                if (adReportRun != null && !adReportRun.getFieldAsyncStatus().equals("Job Skipped")) throw new RuntimeException();
+                if (adReportRun != null && !adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
+                    throw new RuntimeException();
+                }
                 succeeded = true;
-            }
-            catch (APIException e) {
+            } catch (RuntimeException e) {
+                logger.error("Transfer was aborted because the AsyncStatus is \"Job Skipped\"", e);
+            } catch (APIException e) {
                 retryCount++;
             }
         }
