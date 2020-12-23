@@ -61,10 +61,10 @@ public class Client
             logger.info(adReportRun.getRawResponse());
             Thread.sleep(ASYNC_SLEEP_TIME);
             if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
-                throw new RuntimeException("Transfer was aborted because the AsyncStatus is \"Job Skipped\"");
+                throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Skipped\"");
             }
             if (++asyncLoopCount >= 300) {
-                throw new RuntimeException("Transfer was aborted because the AsyncStatus remains \"Job Not Started\"");
+                throw new RuntimeException("async was aborted because the number of retries exceeded the limit");
             }
         }
         logger.info(adReportRun.getRawResponse());
