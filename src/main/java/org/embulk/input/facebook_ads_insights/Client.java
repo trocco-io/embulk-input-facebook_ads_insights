@@ -57,6 +57,9 @@ public class Client
         }
         while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
             Thread.sleep(ASYNC_SLEEP_TIME);
+            if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
+                throw new RuntimeException("Transfer was aborted because the AsyncStatus is \"Job Skipped\"");
+            }
         }
         // extra waiting
         int retryCount = 0;
@@ -66,11 +69,9 @@ public class Client
             try {
                 Thread.sleep(1000);
                 adsInsights = adReportRun.getInsights().execute();
-                if (adReportRun != null && adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
-                    throw new RuntimeException("Transfer was aborted because the AsyncStatus is \"Job Skipped\"");
-                }
                 succeeded = true;
-            } catch (APIException e) {
+            }
+            catch (APIException e) {
                 retryCount++;
             }
         }
