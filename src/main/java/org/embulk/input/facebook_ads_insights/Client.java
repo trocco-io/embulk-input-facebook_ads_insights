@@ -55,8 +55,10 @@ public class Client
             }
             default: throw new IllegalArgumentException();
         }
+        logger.info(adReportRun.getRawResponse());
         Integer asyncRoopCount = 0;
         while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
+            logger.info(adReportRun.getRawResponse());
             Thread.sleep(ASYNC_SLEEP_TIME);
             if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
                 throw new RuntimeException("Transfer was aborted because the AsyncStatus is \"Job Skipped\"");
@@ -65,6 +67,7 @@ public class Client
                 throw new RuntimeException("Transfer was aborted because the AsyncStatus remains \"Job Not Started\"");
             }
         }
+        logger.info(adReportRun.getRawResponse());
         // extra waiting
         int retryCount = 0;
         boolean succeeded = false;
