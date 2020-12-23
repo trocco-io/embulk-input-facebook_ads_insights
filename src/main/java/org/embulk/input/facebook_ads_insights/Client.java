@@ -56,9 +56,16 @@ public class Client
             default: throw new IllegalArgumentException();
         }
         logger.info(adReportRun.getRawResponse());
+        int asyncLoopCount = 0;
         while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
             logger.info(adReportRun.getRawResponse());
             Thread.sleep(ASYNC_SLEEP_TIME);
+            if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
+                throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Skipped\"");
+            }
+            if (++asyncLoopCount >= 300) {
+                throw new RuntimeException("async was aborted because the number of retries exceeded the limit");
+            }
         }
         logger.info(adReportRun.getRawResponse());
         // extra waiting
