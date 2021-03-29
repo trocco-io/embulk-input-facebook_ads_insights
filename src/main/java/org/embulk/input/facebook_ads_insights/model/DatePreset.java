@@ -30,7 +30,8 @@ public class DatePreset
             case "this_month": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_THIS_MONTH);
             case "last_month": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_LAST_MONTH);
             case "this_quarter": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_THIS_QUARTER);
-            case "lifetime": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_LIFETIME);
+            case "lifetime": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_MAXIMUM);
+            case "maximum": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_MAXIMUM);
             case "last_3d": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_LAST_3D);
             case "last_7d": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_LAST_7D);
             case "last_14d": return new DatePreset(AdsInsights.EnumDatePreset.VALUE_LAST_14D);
