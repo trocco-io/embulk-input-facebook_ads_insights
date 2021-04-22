@@ -25,6 +25,7 @@ public class Client
 {
     private final Logger logger =  LoggerFactory.getLogger(Client.class);
     private static final int ASYNC_SLEEP_TIME = 3000;
+    private static final int ASYNC_SLEEP_TIME_LIMIT = 150_000;
 
     private final PluginTask pluginTask;
 
@@ -35,37 +36,37 @@ public class Client
 
     public List<AdsInsights> getInsights(boolean isPaginationValid) throws APIException, InterruptedException
     {
-        AdReportRun adReportRun;
-        switch (pluginTask.getObjectType()) {
-            case ACCOUNT: {
-                adReportRun = getAdAccountInsights();
-                break;
-            }
-            case CAMPAIGN: {
-                adReportRun = getCampaignInsights();
-                break;
-            }
-            case ADSET: {
-                adReportRun = getAdSetInsights();
-                break;
-            }
-            case AD: {
-                adReportRun = getAdInsights();
-                break;
-            }
-            default: throw new IllegalArgumentException();
-        }
-
-        int asyncRetryCount = 0;
+        int elapsedTime = 0;
         boolean asyncCompleted = false;
-        while (asyncRetryCount < pluginTask.getMaxWeightSeconds() && !asyncCompleted) {
+        AdReportRun adReportRun = null;
+        while (!asyncCompleted) {
+            switch (pluginTask.getObjectType()) {
+                case ACCOUNT: {
+                    adReportRun = getAdAccountInsights();
+                    break;
+                }
+                case CAMPAIGN: {
+                    adReportRun = getCampaignInsights();
+                    break;
+                }
+                case ADSET: {
+                    adReportRun = getAdSetInsights();
+                    break;
+                }
+                case AD: {
+                    adReportRun = getAdInsights();
+                    break;
+                }
+                default: throw new IllegalArgumentException();
+            }
             logger.info(adReportRun.getRawResponse());
-            int asyncLoopCount = 0;
+
             String jobStatus = "";
             try {
                 while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
                     logger.info(adReportRun.getRawResponse());
                     Thread.sleep(ASYNC_SLEEP_TIME);
+                    elapsedTime += ASYNC_SLEEP_TIME;
                     if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
                         jobStatus = "skipped";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Skipped\"");
@@ -74,7 +75,7 @@ public class Client
                         jobStatus = "failed";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Failed\"");
                     }
-                    if (++asyncLoopCount >= 300) {
+                    if (adReportRun.getFieldIsRunning() && elapsedTime >= ASYNC_SLEEP_TIME_LIMIT) {
                         jobStatus = "aborted";
                         throw new RuntimeException("async was aborted because the number of retries exceeded the limit");
                     }
@@ -82,14 +83,12 @@ public class Client
                 asyncCompleted = true;
             }
             catch (RuntimeException e) {
-                if (jobStatus == "failed"){
-                    asyncLoopCount++;
-                } else {
-                    throw new APIException();
+                if (jobStatus != "failed"){
+                    throw new APIException(e);
                 }
             }
         }
-        if (adReportRun.getFieldAsyncPercentCompletion() != 100) {
+        if (adReportRun == null || adReportRun.getFieldAsyncPercentCompletion() != 100) {
             throw new APIException();
         }
         logger.info(adReportRun.getRawResponse());
@@ -98,7 +97,7 @@ public class Client
         int retryCount = 0;
         boolean succeeded = false;
         APINodeList<AdsInsights> adsInsights = null;
-        while (retryCount < pluginTask.getMaxWeightSeconds() && !succeeded) {
+        while (retryCount < pluginTask.getMaxWaitSeconds() && !succeeded) {
             try {
                 Thread.sleep(1000);
                 adsInsights = adReportRun.getInsights().execute();
