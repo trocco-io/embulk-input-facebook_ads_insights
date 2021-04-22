@@ -25,7 +25,7 @@ public class Client
 {
     private final Logger logger =  LoggerFactory.getLogger(Client.class);
     private static final int ASYNC_SLEEP_TIME = 3000;
-    private static final int ASYNC_SLEEP_TIME_LIMIT = 150_000;
+    private static final int ASYNC_SLEEP_TIME_LIMIT = 900_000;
 
     private final PluginTask pluginTask;
 
