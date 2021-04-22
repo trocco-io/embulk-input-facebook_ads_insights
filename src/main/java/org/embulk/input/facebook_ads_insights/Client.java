@@ -53,21 +53,48 @@ public class Client
                 adReportRun = getAdInsights();
                 break;
             }
-            default: throw new IllegalArgumentException();
+            default:
+                throw new IllegalArgumentException();
         }
-        logger.info(adReportRun.getRawResponse());
-        int asyncLoopCount = 0;
-        while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
+
+        int asyncRetryCount = 0;
+        String jobStatus = "";
+        boolean asyncCompleted = false;
+        while (asyncRetryCount < pluginTask.getMaxWeightSeconds() && !asyncCompleted) {
             logger.info(adReportRun.getRawResponse());
-            Thread.sleep(ASYNC_SLEEP_TIME);
-            if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
-                throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Skipped\"");
+            int asyncLoopCount = 0;
+            try {
+                while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
+                    logger.info(adReportRun.getRawResponse());
+                    Thread.sleep(ASYNC_SLEEP_TIME);
+                    if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
+                        jobStatus = "skipped";
+                        throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Skipped\"");
+                    }
+                    if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
+                        jobStatus = "failed";
+                        throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Failed\"");
+                    }
+                    if (++asyncLoopCount >= 300) {
+                        jobStatus = "aborted";
+                        throw new RuntimeException("async was aborted because the number of retries exceeded the limit");
+                    }
+                }
+                asyncCompleted = true;
             }
-            if (++asyncLoopCount >= 300) {
-                throw new RuntimeException("async was aborted because the number of retries exceeded the limit");
+            catch (RuntimeException e) {
+                if (jobStatus == "failed"){
+                    asyncLoopCount++;
+                } else {
+                    throw new APIException();
+                }
             }
         }
+        if (adReportRun.getFieldAsyncPercentCompletion() != 100) {
+            throw new APIException();
+        }
         logger.info(adReportRun.getRawResponse());
+
         // extra waiting
         int retryCount = 0;
         boolean succeeded = false;
