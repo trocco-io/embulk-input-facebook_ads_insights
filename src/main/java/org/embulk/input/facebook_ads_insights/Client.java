@@ -53,16 +53,15 @@ public class Client
                 adReportRun = getAdInsights();
                 break;
             }
-            default:
-                throw new IllegalArgumentException();
+            default: throw new IllegalArgumentException();
         }
 
         int asyncRetryCount = 0;
-        String jobStatus = "";
         boolean asyncCompleted = false;
         while (asyncRetryCount < pluginTask.getMaxWeightSeconds() && !asyncCompleted) {
             logger.info(adReportRun.getRawResponse());
             int asyncLoopCount = 0;
+            String jobStatus = "";
             try {
                 while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
                     logger.info(adReportRun.getRawResponse());
