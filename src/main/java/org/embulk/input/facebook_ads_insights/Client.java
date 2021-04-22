@@ -71,7 +71,7 @@ public class Client
                         jobStatus = "skipped";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Skipped\"");
                     }
-                    if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
+                    if (adReportRun.getFieldAsyncStatus().equals("Job Failed")) {
                         jobStatus = "failed";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Failed\"");
                     }
