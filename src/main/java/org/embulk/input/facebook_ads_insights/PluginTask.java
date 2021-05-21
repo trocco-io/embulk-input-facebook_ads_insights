@@ -84,5 +84,5 @@ public interface PluginTask extends Task
 
     @Config("max_wait_seconds")
     @ConfigDefault("60")
-    public Integer getMaxWeightSeconds();
+    public Integer getMaxWaitSeconds();
 }
