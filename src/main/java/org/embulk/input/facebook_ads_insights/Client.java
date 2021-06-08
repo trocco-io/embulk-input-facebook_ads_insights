@@ -75,7 +75,7 @@ public class Client
                         jobStatus = "failed";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Failed\"");
                     }
-                    if (adReportRun.getFieldAsyncStatus().equals("Job Not Started") && elapsedTime >= ASYNC_SLEEP_TIME_LIMIT) {
+                    if (elapsedTime >= ASYNC_SLEEP_TIME_LIMIT) {
                         jobStatus = "aborted";
                         throw new RuntimeException("async was aborted because the number of retries exceeded the limit");
                     }
@@ -83,9 +83,10 @@ public class Client
                 asyncCompleted = true;
             }
             catch (RuntimeException e) {
-                if (jobStatus != "failed"){
-                    throw new APIException(e);
+                if (jobStatus.equals("failed")) {
+                    continue;
                 }
+                throw new APIException(e);
             }
         }
         if (adReportRun == null || adReportRun.getFieldAsyncPercentCompletion() != 100) {
