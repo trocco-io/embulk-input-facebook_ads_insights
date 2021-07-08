@@ -36,7 +36,6 @@ public class Client
 
     public List<AdsInsights> getInsights(boolean isPaginationValid) throws APIException, InterruptedException
     {
-        int elapsedTime = 0;
         boolean asyncCompleted = false;
         AdReportRun adReportRun = null;
         while (!asyncCompleted) {
@@ -62,11 +61,18 @@ public class Client
             logger.info(adReportRun.getRawResponse());
 
             String jobStatus = "";
+            int elapsedTime = 0;
+            long asyncPercentBefore = 0;
             try {
-                while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
+                long asyncPercentCompletion = adReportRun.fetch().getFieldAsyncPercentCompletion();
+                while (asyncPercentCompletion != 100) {
                     logger.info(adReportRun.getRawResponse());
                     Thread.sleep(ASYNC_SLEEP_TIME);
-                    elapsedTime += ASYNC_SLEEP_TIME;
+                    if (asyncPercentBefore != asyncPercentCompletion) {
+                        elapsedTime = 0;
+                    } else {
+                        elapsedTime += ASYNC_SLEEP_TIME;
+                    }
                     if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
                         jobStatus = "skipped";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Skipped\"");
@@ -75,7 +81,7 @@ public class Client
                         jobStatus = "failed";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Failed\"");
                     }
-                    if (adReportRun.getFieldAsyncStatus().equals("Job Not Started") && elapsedTime >= ASYNC_SLEEP_TIME_LIMIT) {
+                    if (elapsedTime >= ASYNC_SLEEP_TIME_LIMIT) {
                         jobStatus = "aborted";
                         throw new RuntimeException("async was aborted because the number of retries exceeded the limit");
                     }
@@ -83,9 +89,10 @@ public class Client
                 asyncCompleted = true;
             }
             catch (RuntimeException e) {
-                if (jobStatus != "failed"){
-                    throw new APIException(e);
+                if (jobStatus.equals("failed")) {
+                    continue;
                 }
+                throw new APIException(e);
             }
         }
         if (adReportRun == null || adReportRun.getFieldAsyncPercentCompletion() != 100) {
