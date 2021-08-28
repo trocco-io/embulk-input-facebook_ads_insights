@@ -69,7 +69,6 @@ public class AdsInsightsAccessor
             case "cost_per_inline_post_engagement": return adsInsights.getFieldCostPerInlinePostEngagement();
             case "cost_per_one_thousand_ad_impression": return actionsToString(adsInsights.getFieldCostPerOneThousandAdImpression());
             case "cost_per_outbound_click": return actionsToString(adsInsights.getFieldCostPerOutboundClick());
-            case "cost_per_store_visit_action": return actionsToString(adsInsights.getFieldCostPerStoreVisitAction());
             case "cost_per_thruplay": return actionsToString(adsInsights.getFieldCostPerThruplay());
             case "cost_per_unique_action_type": return actionsToString(adsInsights.getFieldCostPerUniqueActionType());
             case "cost_per_unique_click": return adsInsights.getFieldCostPerUniqueClick();
@@ -101,7 +100,7 @@ public class AdsInsightsAccessor
             case "inline_post_engagement": return adsInsights.getFieldInlinePostEngagement();
             case "instant_experience_clicks_to_open": return adsInsights.getFieldInstantExperienceClicksToOpen();
             case "instant_experience_clicks_to_start": return adsInsights.getFieldInstantExperienceClicksToStart();
-            case "instant_experience_outbound_clicks": return adsInsights.getFieldInstantExperienceOutboundClicks();
+            case "instant_experience_outbound_clicks": return actionsToString(adsInsights.getFieldInstantExperienceOutboundClicks());
             case "labels": return adsInsights.getFieldLabels();
             case "location": return adsInsights.getFieldLocation();
             case "mobile_app_purchase_roas": return actionsToString(adsInsights.getFieldMobileAppPurchaseRoas());
@@ -117,7 +116,6 @@ public class AdsInsightsAccessor
             case "reach": return adsInsights.getFieldReach();
             case "social_spend": return adsInsights.getFieldSocialSpend();
             case "spend": return adsInsights.getFieldSpend();
-            case "store_visit_actions": return actionsToString(adsInsights.getFieldStoreVisitActions());
             case "unique_actions": return actionsToString(adsInsights.getFieldUniqueActions());
             case "unique_clicks": return adsInsights.getFieldUniqueClicks();
             case "unique_conversions": return actionsToString(adsInsights.getFieldUniqueConversions());
