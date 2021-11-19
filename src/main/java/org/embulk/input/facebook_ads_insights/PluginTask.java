@@ -85,4 +85,8 @@ public interface PluginTask extends Task
     @Config("max_wait_seconds")
     @ConfigDefault("60")
     public Integer getMaxWaitSeconds();
+
+    @Config("enable_debug")
+    @ConfigDefault("false")
+    public boolean getEnableDebug();
 }
