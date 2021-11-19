@@ -312,7 +312,9 @@ public class Client
 
     private APIContext apiContext()
     {
-        return new APIContext(pluginTask.getAccessToken());
+        APIContext context = new APIContext(pluginTask.getAccessToken());
+        context.enableDebug(this.pluginTask.getEnableDebug());
+        return context;
     }
     private List<String> fieldNames()
     {
