@@ -158,6 +158,9 @@ public class Client
         if (pluginTask.getUseAccountAttributionSetting().isPresent()) {
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
         }
+        if (pluginTask.getUseUnifiedAttributionSetting().isPresent()) {
+            request.setUseUnifiedAttributionSetting(pluginTask.getUseUnifiedAttributionSetting().get());
+        }
         return request.execute();
     }
 
@@ -203,6 +206,9 @@ public class Client
         }
         if (pluginTask.getUseAccountAttributionSetting().isPresent()) {
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
+        }
+        if (pluginTask.getUseUnifiedAttributionSetting().isPresent()) {
+            request.setUseUnifiedAttributionSetting(pluginTask.getUseUnifiedAttributionSetting().get());
         }
         return request.execute();
     }
@@ -250,6 +256,9 @@ public class Client
         if (pluginTask.getUseAccountAttributionSetting().isPresent()) {
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
         }
+        if (pluginTask.getUseUnifiedAttributionSetting().isPresent()) {
+            request.setUseUnifiedAttributionSetting(pluginTask.getUseUnifiedAttributionSetting().get());
+        }
         return request.execute();
     }
 
@@ -295,6 +304,9 @@ public class Client
         }
         if (pluginTask.getUseAccountAttributionSetting().isPresent()) {
             request.setUseAccountAttributionSetting(pluginTask.getUseAccountAttributionSetting().get());
+        }
+        if (pluginTask.getUseUnifiedAttributionSetting().isPresent()) {
+            request.setUseUnifiedAttributionSetting(pluginTask.getUseUnifiedAttributionSetting().get());
         }
         return request.execute();
     }
