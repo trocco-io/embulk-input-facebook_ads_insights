@@ -32,6 +32,7 @@ Required Embulk version >= 0.9
 | time_range                      | no       | {since:YYYY-MM-DD, until:YYYY-MM-DD}                             | see [time_range](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details.                      |
 | time_ranges                     | no       | array({since:YYYY-MM-DD, until:YYYY-MM-DD})                      | see [time_ranges](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details.                     |
 | use_account_attribution_setting | no       | boolean                                                          | see [use_account_attribution_setting](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details. |
+| use_unified_attribution_setting | no       | boolean                                                          | see [use_unified_attribution_setting](https://developers.facebook.com/docs/marketing-api/insights/parameters) for details. |
 
 ### Enums
 

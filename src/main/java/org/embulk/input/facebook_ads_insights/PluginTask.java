@@ -82,6 +82,10 @@ public interface PluginTask extends Task
     @ConfigDefault("null")
     public Optional<Boolean> getUseAccountAttributionSetting();
 
+    @Config("use_unified_attribution_setting")
+    @ConfigDefault("null")
+    public Optional<Boolean> getUseUnifiedAttributionSetting();
+
     @Config("max_wait_seconds")
     @ConfigDefault("60")
     public Integer getMaxWaitSeconds();
