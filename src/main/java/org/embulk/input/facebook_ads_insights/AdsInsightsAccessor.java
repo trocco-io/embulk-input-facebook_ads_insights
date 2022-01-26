@@ -29,18 +29,12 @@ public class AdsInsightsAccessor
             case "account_name": return adsInsights.getFieldAccountName();
             case "action_values": return actionsToString(adsInsights.getFieldActionValues());
             case "actions": return actionsToString(adsInsights.getFieldActions());
-            case "ad_bid_type": return adsInsights.getFieldAdBidType();
             case "ad_bid_value": return adsInsights.getFieldAdBidValue();
             case "ad_click_actions": return actionsToString(adsInsights.getFieldAdClickActions());
-            case "ad_delivery": return adsInsights.getFieldAdDelivery();
             case "ad_id": return adsInsights.getFieldAdId();
             case "ad_impression_actions": return actionsToString(adsInsights.getFieldAdImpressionActions());
             case "ad_name": return adsInsights.getFieldAdName();
-            case "adset_bid_type": return adsInsights.getFieldAdsetBidType();
             case "adset_bid_value": return adsInsights.getFieldAdsetBidValue();
-            case "adset_budget_type": return adsInsights.getFieldAdsetBudgetType();
-            case "adset_budget_value": return adsInsights.getFieldAdsetBudgetValue();
-            case "adset_delivery": return adsInsights.getFieldAdsetDelivery();
             case "adset_end": return adsInsights.getFieldAdsetEnd();
             case "adset_id": return adsInsights.getFieldAdsetId();
             case "adset_name": return adsInsights.getFieldAdsetName();
