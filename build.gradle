@@ -13,7 +13,14 @@ configurations {
     provided
 }
 
-version = "0.1.17"
+version = {
+     def vd = versionDetails()
+     if (vd.commitDistance == 0 && vd.lastTag ==~ /^[0-9]+\.[0-9]+\.[0-9]+(\.[a-zA-Z0-9]+)?/) {
+         vd.lastTag
+     } else {
+         "0.0.0.${vd.gitHash}.pre"
+     }
+ }()
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -21,7 +28,7 @@ targetCompatibility = 1.8
 dependencies {
     compile  "org.embulk:embulk-core:0.9.17"
     provided "org.embulk:embulk-core:0.9.17"
-    compile group: "com.facebook.business.sdk", name: "facebook-java-business-sdk", version: "16.0.2"
+    compile group: "com.facebook.business.sdk", name: "facebook-java-business-sdk", version: "15.0.0"
     // compile "YOUR_JAR_DEPENDENCY_GROUP:YOUR_JAR_DEPENDENCY_MODULE:YOUR_JAR_DEPENDENCY_VERSION"
     testCompile "junit:junit:4.+"
 }
