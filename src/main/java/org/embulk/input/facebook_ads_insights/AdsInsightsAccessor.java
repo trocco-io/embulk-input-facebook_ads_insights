@@ -102,9 +102,6 @@ public class AdsInsightsAccessor
             case "place_page_name": return adsInsights.getFieldPlacePageName();
             case "purchase_roas": return actionsToString(adsInsights.getFieldPurchaseRoas());
             case "quality_ranking": return adsInsights.getFieldQualityRanking();
-            case "quality_score_ectr": return adsInsights.getFieldQualityScoreEctr();
-            case "quality_score_ecvr": return adsInsights.getFieldQualityScoreEcvr();
-            case "quality_score_organic": return adsInsights.getFieldQualityScoreOrganic();
             case "reach": return adsInsights.getFieldReach();
             case "social_spend": return adsInsights.getFieldSocialSpend();
             case "spend": return adsInsights.getFieldSpend();
