@@ -1,5 +1,4 @@
 plugins {
-    id "com.jfrog.bintray" version "1.1"
     id "com.github.jruby-gradle.base" version "1.5.0"
     id "com.palantir.git-version" version "0.13.0"
     id "com.diffplug.spotless" version "5.15.0"
@@ -30,7 +29,7 @@ targetCompatibility = 1.8
 dependencies {
     compile  "org.embulk:embulk-core:0.9.17"
     provided "org.embulk:embulk-core:0.9.17"
-    compile group: "com.facebook.business.sdk", name: "facebook-java-business-sdk", version: "18.0.4"
+    compile group: "com.facebook.business.sdk", name: "facebook-java-business-sdk", version: "19.0.3"
     // compile "YOUR_JAR_DEPENDENCY_GROUP:YOUR_JAR_DEPENDENCY_MODULE:YOUR_JAR_DEPENDENCY_VERSION"
     testCompile "junit:junit:4.+"
 }
@@ -106,3 +105,15 @@ end
     }
 }
 clean { delete "${project.name}.gemspec" }
+
+sourceSets.all {
+    configurations.getByName(runtimeClasspathConfigurationName) {
+        attributes.attribute(Attribute.of("org.gradle.jvm.environment", String), "standard-jvm")
+    }
+    configurations.getByName(compileClasspathConfigurationName) {
+        attributes.attribute(Attribute.of("org.gradle.jvm.environment", String), "standard-jvm")
+    }
+    configurations.getByName(runtimeConfigurationName) {
+        attributes.attribute(Attribute.of("org.gradle.jvm.environment", String), "standard-jvm")
+    }
+}

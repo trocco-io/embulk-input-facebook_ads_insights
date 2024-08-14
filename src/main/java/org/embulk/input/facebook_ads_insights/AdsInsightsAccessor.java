@@ -37,7 +37,6 @@ public class AdsInsightsAccessor
             case "adset_id": return adsInsights.getFieldAdsetId();
             case "adset_name": return adsInsights.getFieldAdsetName();
             case "adset_start": return adsInsights.getFieldAdsetStart();
-            case "age_targeting": return adsInsights.getFieldAgeTargeting();
             case "auction_bid": return adsInsights.getFieldAuctionBid();
             case "auction_competitiveness": return adsInsights.getFieldAuctionCompetitiveness();
             case "auction_max_competitor_bid": return adsInsights.getFieldAuctionMaxCompetitorBid();
@@ -77,15 +76,10 @@ public class AdsInsightsAccessor
             case "dda_countby_convs": return adsInsights.getFieldDdaCountbyConvs();
             case "engagement_rate_ranking": return adsInsights.getFieldEngagementRateRanking();
             case "estimated_ad_recall_rate": return adsInsights.getFieldEstimatedAdRecallRate();
-            case "estimated_ad_recall_rate_lower_bound": return adsInsights.getFieldEstimatedAdRecallRateLowerBound();
-            case "estimated_ad_recall_rate_upper_bound": return adsInsights.getFieldEstimatedAdRecallRateUpperBound();
             case "estimated_ad_recallers": return adsInsights.getFieldEstimatedAdRecallers();
-            case "estimated_ad_recallers_lower_bound": return adsInsights.getFieldEstimatedAdRecallersLowerBound();
-            case "estimated_ad_recallers_upper_bound": return adsInsights.getFieldEstimatedAdRecallersUpperBound();
             case "frequency": return adsInsights.getFieldFrequency();
             case "full_view_impressions": return adsInsights.getFieldFullViewImpressions();
             case "full_view_reach": return adsInsights.getFieldFullViewReach();
-            case "gender_targeting": return adsInsights.getFieldGenderTargeting();
             case "impressions": return adsInsights.getFieldImpressions();
             case "inline_link_click_ctr": return adsInsights.getFieldInlineLinkClickCtr();
             case "inline_link_clicks": return adsInsights.getFieldInlineLinkClicks();
@@ -93,8 +87,6 @@ public class AdsInsightsAccessor
             case "instant_experience_clicks_to_open": return adsInsights.getFieldInstantExperienceClicksToOpen();
             case "instant_experience_clicks_to_start": return adsInsights.getFieldInstantExperienceClicksToStart();
             case "instant_experience_outbound_clicks": return actionsToString(adsInsights.getFieldInstantExperienceOutboundClicks());
-            case "labels": return adsInsights.getFieldLabels();
-            case "location": return adsInsights.getFieldLocation();
             case "mobile_app_purchase_roas": return actionsToString(adsInsights.getFieldMobileAppPurchaseRoas());
             case "objective": return adsInsights.getFieldObjective();
             case "outbound_clicks": return actionsToString(adsInsights.getFieldOutboundClicks());
