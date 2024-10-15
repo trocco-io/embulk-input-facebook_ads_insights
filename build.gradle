@@ -79,3 +79,12 @@ sourceSets.all {
         attributes.attribute(Attribute.of("org.gradle.jvm.environment", String), "standard-jvm")
     }
 }
+
+spotless {
+    java {
+        importOrder()
+        removeUnusedImports()
+        // googleJavaFormat()
+        toggleOffOn()
+    }
+}
