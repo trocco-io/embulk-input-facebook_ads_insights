@@ -2,6 +2,7 @@ plugins {
     id "org.embulk.embulk-plugins" version "0.5.5"
     id "com.palantir.git-version" version "0.13.0"
     id "com.diffplug.spotless" version "5.15.0"
+    id "com.adarshr.test-logger" version "3.0.0"
     id "java"
     id "checkstyle"
 }

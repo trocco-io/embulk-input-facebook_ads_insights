@@ -34,7 +34,7 @@ jobs:
       - name: lint
         run: ./gradlew spotlessCheck
       - name: Test
-        run: ./gradlew test --stacktrace --info
+        run: ./gradlew test
   build:
     name: Build + Publish
     runs-on: ubuntu-latest
