@@ -112,11 +112,11 @@ public class FacebookAdsInsightsColumnVisitor implements ColumnVisitor
     {
         try {
             Value data = new org.embulk.util.json.JsonParser().parse(accessor.get(column.getName()));
-            if (data.isNilValue() || (!data.isMapValue() && !data.isArrayValue())) {
-                pageBuilder.setNull(column);
+            if (data.isMapValue() || data.isArrayValue()) {
+                pageBuilder.setJson(column, data);
             }
             else {
-                pageBuilder.setJson(column, new org.embulk.util.json.JsonParser().parse(data.toString()));
+                pageBuilder.setNull(column);
             }
         }
         catch (Exception e) {
