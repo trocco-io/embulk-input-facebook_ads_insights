@@ -48,6 +48,8 @@ dependencies {
     testImplementation "org.embulk:embulk-core:${embulkVersion}"
     testImplementation "org.embulk:embulk-deps:${embulkVersion}"
     testImplementation "org.embulk:embulk-junit4:${embulkVersion}"
+    testImplementation "org.embulk:embulk-output-file:${embulkVersion}"
+    testImplementation "org.embulk:embulk-formatter-csv:${embulkVersion}"
 }
 
 embulkPlugin {
