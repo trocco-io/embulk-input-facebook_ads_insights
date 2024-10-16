@@ -97,7 +97,8 @@ public class FacebookAdsInsightsColumnVisitor implements ColumnVisitor
                 }
             }
             TimestampFormatter timestampFormatter = TimestampFormatter.builder(pattern, true).setDefaultZoneFromString("UTC").build();
-            org.embulk.spi.time.Timestamp result = org.embulk.spi.time.Timestamp.ofInstant(timestampFormatter.parse(column.getName()));
+            String data = accessor.get(column.getName());
+            org.embulk.spi.time.Timestamp result = org.embulk.spi.time.Timestamp.ofInstant(timestampFormatter.parse(data));
             pageBuilder.setTimestamp(column, result);
         }
         catch (Exception e) {
