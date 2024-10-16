@@ -1,7 +1,7 @@
 package org.embulk.input.facebook_ads_insights;
 
 import com.google.gson.Gson;
-import org.embulk.spi.unit.ToStringMap;
+import org.embulk.input.facebook_ads_insights.unit.ToStringMap;
 
 import java.util.List;
 import java.util.stream.Collectors;

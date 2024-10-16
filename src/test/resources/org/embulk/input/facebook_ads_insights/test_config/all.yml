@@ -1,0 +1,31 @@
+type: facebook_ads_insights
+access_token: "all_at"
+object_type: campaign
+object_id: "123"
+level: account
+fields:
+  - name: account_id
+    type: string
+  - name: date_start
+    type: timestamp
+    format: "%Y-%m-%d"
+action_attribution_windows: [1d_click, 28d_view]
+action_breakdowns: [action_device, action_type]
+action_report_time: conversion
+breakdowns: [age, gender]
+date_preset: today
+filtering:
+  - {field: f0, operator: o0, value: v0}
+  - {field: f1, operator: o1, value: v1}
+level: campaign
+product_id_limit: 23
+sort: [s0, s1]
+time_increment: "456"
+time_range: {since: 2019-09-01, until: 2019-09-07}
+time_ranges:
+  - {since: 2019-09-01, until: 2019-09-07}
+  - {since: 2020-09-01, until: 2020-09-07}
+use_account_attribution_setting: true
+use_unified_attribution_setting: false
+max_wait_seconds: 100
+enable_debug: true

@@ -1,0 +1,33 @@
+# This is a Gradle generated file for dependency locking.
+# Manual edits can break the build and are not advised.
+# This file is expected to be part of source control.
+com.facebook.business.sdk:facebook-java-business-sdk:19.0.3
+com.fasterxml.jackson.core:jackson-annotations:2.6.7
+com.fasterxml.jackson.core:jackson-core:2.6.7
+com.fasterxml.jackson.core:jackson-databind:2.6.7.5
+com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.6.7
+com.google.code.findbugs:jsr305:3.0.2
+com.google.code.gson:gson:2.8.9
+com.google.errorprone:error_prone_annotations:2.23.0
+com.google.guava:failureaccess:1.0.2
+com.google.guava:guava:33.0.0-jre
+com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+com.google.j2objc:j2objc-annotations:2.8
+com.squareup.okhttp3:okhttp:3.9.1
+com.squareup.okio:okio-jvm:3.4.0
+com.squareup.okio:okio:3.4.0
+javax.validation:validation-api:1.1.0.Final
+org.checkerframework:checker-qual:3.41.0
+org.embulk:embulk-api:0.10.42
+org.embulk:embulk-spi:0.10.42
+org.embulk:embulk-util-config:0.3.4
+org.embulk:embulk-util-json:0.3.0
+org.embulk:embulk-util-rubytime:0.4.0
+org.embulk:embulk-util-timestamp:0.3.0
+org.jetbrains.kotlin:kotlin-stdlib-common:1.8.0
+org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0
+org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0
+org.jetbrains.kotlin:kotlin-stdlib:1.8.0
+org.jetbrains:annotations:13.0
+org.msgpack:msgpack-core:0.8.24
+org.slf4j:slf4j-api:1.7.30

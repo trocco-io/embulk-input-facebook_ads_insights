@@ -1,0 +1,7 @@
+type: facebook_ads_insights
+access_token: "min_at"
+object_type: account
+object_id: "1"
+fields:
+  - name: account_id
+    type: string

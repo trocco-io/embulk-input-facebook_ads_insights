@@ -1,14 +1,12 @@
 package org.embulk.input.facebook_ads_insights;
 
 import com.facebook.ads.sdk.AdsInsights;
-import com.google.gson.JsonElement;
 import org.embulk.spi.Column;
-import org.embulk.spi.ColumnConfig;
 import org.embulk.spi.ColumnVisitor;
 import org.embulk.spi.PageBuilder;
-import org.embulk.spi.json.JsonParser;
-import org.embulk.spi.time.Timestamp;
-import org.embulk.spi.time.TimestampParser;
+import org.embulk.util.config.units.ColumnConfig;
+import org.embulk.util.timestamp.TimestampFormatter;
+import org.msgpack.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +78,8 @@ public class FacebookAdsInsightsColumnVisitor implements ColumnVisitor
             pageBuilder.setNull(column);
         }
     }
+
+    @SuppressWarnings("deprecation") // For the use of org.embulk.spi.time.Timestamp.
     @Override
     public void timestampColumn(Column column)
     {
@@ -89,31 +89,34 @@ public class FacebookAdsInsightsColumnVisitor implements ColumnVisitor
             for (ColumnConfig config : columnConfigs) {
                 if (config.getName().equals(column.getName())
                         && config.getConfigSource() != null
-                        && config.getConfigSource().getObjectNode() != null
-                        && config.getConfigSource().getObjectNode().get("format") != null
-                        && config.getConfigSource().getObjectNode().get("format").isTextual()) {
-                    pattern = config.getConfigSource().getObjectNode().get("format").asText();
+                        && !config.getConfigSource().isEmpty()
+                        && config.getConfigSource().has("format")
+                        && config.getConfigSource().get(String.class, "format") != null) {
+                    pattern = config.getConfigSource().get(String.class, "format");
                     break;
                 }
             }
-            TimestampParser parser = TimestampParser.of(pattern, "UTC");
-            Timestamp result = parser.parse(column.getName());
+            TimestampFormatter timestampFormatter = TimestampFormatter.builder(pattern, true).setDefaultZoneFromString("UTC").build();
+            String data = accessor.get(column.getName());
+            org.embulk.spi.time.Timestamp result = org.embulk.spi.time.Timestamp.ofInstant(timestampFormatter.parse(data));
             pageBuilder.setTimestamp(column, result);
         }
         catch (Exception e) {
             pageBuilder.setNull(column);
         }
     }
+
+    @SuppressWarnings("deprecation") // For the use of org.embulk.util.json.JsonParser
     @Override
     public void jsonColumn(Column column)
     {
         try {
-            JsonElement data = new com.google.gson.JsonParser().parse(accessor.get(column.getName()));
-            if (data.isJsonNull() || data.isJsonPrimitive()) {
-                pageBuilder.setNull(column);
+            Value data = new org.embulk.util.json.JsonParser().parse(accessor.get(column.getName()));
+            if (data.isMapValue() || data.isArrayValue()) {
+                pageBuilder.setJson(column, data);
             }
             else {
-                pageBuilder.setJson(column, new JsonParser().parse(data.toString()));
+                pageBuilder.setNull(column);
             }
         }
         catch (Exception e) {

@@ -1,8 +1,5 @@
 package org.embulk.input.facebook_ads_insights;
 
-import org.embulk.config.Config;
-import org.embulk.config.ConfigDefault;
-import org.embulk.config.Task;
 import org.embulk.input.facebook_ads_insights.model.ActionAttributionWindow;
 import org.embulk.input.facebook_ads_insights.model.ActionBreakdown;
 import org.embulk.input.facebook_ads_insights.model.ActionReportTime;
@@ -10,8 +7,11 @@ import org.embulk.input.facebook_ads_insights.model.Breakdown;
 import org.embulk.input.facebook_ads_insights.model.DatePreset;
 import org.embulk.input.facebook_ads_insights.model.Level;
 import org.embulk.input.facebook_ads_insights.model.ObjectType;
-import org.embulk.spi.SchemaConfig;
-import org.embulk.spi.unit.ToStringMap;
+import org.embulk.input.facebook_ads_insights.unit.ToStringMap;
+import org.embulk.util.config.Config;
+import org.embulk.util.config.ConfigDefault;
+import org.embulk.util.config.Task;
+import org.embulk.util.config.units.SchemaConfig;
 
 import java.util.List;
 import java.util.Optional;
