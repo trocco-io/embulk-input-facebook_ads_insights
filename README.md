@@ -78,3 +78,15 @@ in:
 ```
 $ ./gradlew gem  # -t to watch change of files and rebuild continuously
 ```
+
+## TEST
+
+```
+$ ./gradlew test
+```
+
+If you want to test using the actual API, create a file referring to example/test.yml.example and set the EMBULK_INPUT_FACEBOOK_ADS_INSIGTHS_TEST_CONFIG environment variable.
+
+```
+$ EMBULK_INPUT_FACEBOOK_ADS_INSIGTHS_TEST_CONFIG="example/test.yml" ./gradlew test # Create example/test.yml based on example/test.yml.example
+```

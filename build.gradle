@@ -42,9 +42,14 @@ dependencies {
     compile group: "com.facebook.business.sdk", name: "facebook-java-business-sdk", version: "19.0.3"
     // compile "YOUR_JAR_DEPENDENCY_GROUP:YOUR_JAR_DEPENDENCY_MODULE:YOUR_JAR_DEPENDENCY_VERSION"
     testImplementation "junit:junit:4.+"
+    testImplementation "org.mockito:mockito-core:3.11.2"
+    testImplementation "org.embulk:embulk-api:${embulkVersion}"
+    testImplementation "org.embulk:embulk-spi:${embulkVersion}"
     testImplementation "org.embulk:embulk-core:${embulkVersion}"
     testImplementation "org.embulk:embulk-deps:${embulkVersion}"
     testImplementation "org.embulk:embulk-junit4:${embulkVersion}"
+    testImplementation "org.embulk:embulk-output-file:${embulkVersion}"
+    testImplementation "org.embulk:embulk-formatter-csv:${embulkVersion}"
 }
 
 embulkPlugin {
