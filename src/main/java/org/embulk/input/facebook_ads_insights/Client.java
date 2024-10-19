@@ -12,7 +12,7 @@ import com.facebook.ads.sdk.Campaign;
 import org.embulk.input.facebook_ads_insights.model.ActionAttributionWindow;
 import org.embulk.input.facebook_ads_insights.model.ActionBreakdown;
 import org.embulk.input.facebook_ads_insights.model.Breakdown;
-import org.embulk.spi.ColumnConfig;
+import org.embulk.util.config.units.ColumnConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
