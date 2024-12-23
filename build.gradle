@@ -1,18 +1,22 @@
 plugins {
-    id "com.github.jruby-gradle.base" version "1.5.0"
+    id "org.embulk.embulk-plugins" version "0.5.5"
     id "com.palantir.git-version" version "0.13.0"
     id "com.diffplug.spotless" version "5.15.0"
+    id "com.adarshr.test-logger" version "3.0.0"
     id "java"
     id "checkstyle"
 }
-import com.github.jrubygradle.JRubyExec
+
 repositories {
     mavenCentral()
-    jcenter()
 }
+
 configurations {
     provided
 }
+
+group = "io.trocco"
+description = "Facebook Ads Insights input plugin for Embulk."
 
 version = {
      def vd = versionDetails()
@@ -27,84 +31,48 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile  "org.embulk:embulk-core:0.9.17"
-    provided "org.embulk:embulk-core:0.9.17"
+    def embulkVersion = "0.10.42"
+    compileOnly("org.embulk:embulk-api:${embulkVersion}")
+    compileOnly("org.embulk:embulk-spi:${embulkVersion}")
+
+    compile "org.embulk:embulk-util-config:0.3.4"
+    compile "org.embulk:embulk-util-timestamp:0.3.0"
+    compile "org.embulk:embulk-util-json:0.3.0"
+
     compile group: "com.facebook.business.sdk", name: "facebook-java-business-sdk", version: "19.0.3"
     // compile "YOUR_JAR_DEPENDENCY_GROUP:YOUR_JAR_DEPENDENCY_MODULE:YOUR_JAR_DEPENDENCY_VERSION"
-    testCompile "junit:junit:4.+"
+    testImplementation "junit:junit:4.+"
+    testImplementation "org.mockito:mockito-core:3.11.2"
+    testImplementation "org.embulk:embulk-api:${embulkVersion}"
+    testImplementation "org.embulk:embulk-spi:${embulkVersion}"
+    testImplementation "org.embulk:embulk-core:${embulkVersion}"
+    testImplementation "org.embulk:embulk-deps:${embulkVersion}"
+    testImplementation "org.embulk:embulk-junit4:${embulkVersion}"
+    testImplementation "org.embulk:embulk-output-file:${embulkVersion}"
+    testImplementation "org.embulk:embulk-formatter-csv:${embulkVersion}"
 }
 
-task classpath(type: Copy, dependsOn: ["jar"]) {
-    doFirst { file("classpath").deleteDir() }
-    from (configurations.runtime - configurations.provided + files(jar.archivePath))
-    into "classpath"
+embulkPlugin {
+    mainClass = "org.embulk.input.facebook_ads_insights.FacebookAdsInsightsInputPlugin"
+    category = "input"
+    type = "facebook_ads_insights"
 }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    options.encoding = "UTF-8"
+}
+
 clean { delete "classpath" }
 
-checkstyle {
-    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
-    toolVersion = '6.14.1'
+gem {
+    from("LICENSE.txt")
+    authors = ["naotaka nakane"]
+    email = ["n.nakane0219@gmail.com"]
+    summary = "Facebook Ads Insights input plugin for Embulk."
+    homepage = "https://github.com/trocco-io/embulk-input-facebook_ads_insights"
+    licenses = [ "MIT" ]
 }
-checkstyleMain {
-    configFile = file("${project.rootDir}/config/checkstyle/default.xml")
-    ignoreFailures = true
-}
-checkstyleTest {
-    configFile = file("${project.rootDir}/config/checkstyle/default.xml")
-    ignoreFailures = true
-}
-task checkstyle(type: Checkstyle) {
-    classpath = sourceSets.main.output + sourceSets.test.output
-    source = sourceSets.main.allJava + sourceSets.test.allJava
-}
-
-task gem(type: JRubyExec, dependsOn: ["gemspec", "classpath"]) {
-    jrubyArgs "-S"
-    script "gem"
-    scriptArgs "build", "${project.name}.gemspec"
-    doLast { ant.move(file: "${project.name}-${project.version}.gem", todir: "pkg") }
-}
-
-task gemPush(type: JRubyExec, dependsOn: ["gem"]) {
-    jrubyArgs "-S"
-    script "gem"
-    scriptArgs "push", "pkg/${project.name}-${project.version}.gem"
-}
-
-task "package"(dependsOn: ["gemspec", "classpath"]) {
-    doLast {
-        println "> Build succeeded."
-        println "> You can run embulk with '-L ${file(".").absolutePath}' argument."
-    }
-}
-
-task gemspec {
-    ext.gemspecFile = file("${project.name}.gemspec")
-    inputs.file "build.gradle"
-    outputs.file gemspecFile
-    doLast { gemspecFile.write($/
-Gem::Specification.new do |spec|
-  spec.name          = "${project.name}"
-  spec.version       = "${project.version}"
-  spec.authors       = ["naotaka nakane"]
-  spec.summary       = %[Facebook Ads Insights input plugin for Embulk]
-  spec.description   = %[Loads records from Facebook Ads Insights.]
-  spec.email         = ["n.nakane0219@gmail.com"]
-  spec.licenses      = ["MIT"]
-  spec.homepage      = "https://github.com/trocco-io/embulk-input-facebook_ads_insights"
-
-  spec.files         = `git ls-files`.split("\n") + Dir["classpath/*.jar"]
-  spec.test_files    = spec.files.grep(%r"^(test|spec)/")
-  spec.require_paths = ["lib"]
-
-  #spec.add_dependency 'YOUR_GEM_DEPENDENCY', ['~> YOUR_GEM_DEPENDENCY_VERSION']
-  spec.add_development_dependency 'bundler', ['~> 1.0']
-  spec.add_development_dependency 'rake', ['~> 12.0']
-end
-/$)
-    }
-}
-clean { delete "${project.name}.gemspec" }
 
 sourceSets.all {
     configurations.getByName(runtimeClasspathConfigurationName) {
@@ -115,5 +83,14 @@ sourceSets.all {
     }
     configurations.getByName(runtimeConfigurationName) {
         attributes.attribute(Attribute.of("org.gradle.jvm.environment", String), "standard-jvm")
+    }
+}
+
+spotless {
+    java {
+        importOrder()
+        removeUnusedImports()
+        // googleJavaFormat()
+        toggleOffOn()
     }
 }
