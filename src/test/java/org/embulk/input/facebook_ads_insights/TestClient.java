@@ -1,15 +1,14 @@
 package org.embulk.input.facebook_ads_insights;
 
-import com.facebook.ads.sdk.APIContext;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import com.facebook.ads.sdk.AdReportRun;
 import org.embulk.util.config.ConfigMapperFactory;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 /**
  * Test class for Client, focusing on v23.0 compatibility features
