@@ -335,7 +335,6 @@ public class Client
 
     private AdReportRun fetchAdReportRunSafely(String reportRunId) {
         try {
-            // v21.0との後方互換性を保持しつつ、v23.0の権限エラーを回避
             return new AdReportRun(reportRunId, apiContext())
                 .get()
                 .requestAccountIdField()
