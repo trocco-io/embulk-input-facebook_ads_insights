@@ -59,19 +59,18 @@ public class Client
                 }
                 default: throw new IllegalArgumentException();
             }
-            logger.info(adReportRun.getRawResponse());
 
             String jobStatus = "";
             try {
-                while (adReportRun.fetch().getFieldAsyncPercentCompletion() != 100) {
-                    logger.info(adReportRun.getRawResponse());
+                while (fetchAdReportRunSafely(adReportRun.getId()).getFieldAsyncPercentCompletion() != 100) {
+                    AdReportRun currentReport = fetchAdReportRunSafely(adReportRun.getId());
                     Thread.sleep(ASYNC_SLEEP_TIME);
                     elapsedTime += ASYNC_SLEEP_TIME;
-                    if (adReportRun.getFieldAsyncStatus().equals("Job Skipped")) {
+                    if (currentReport.getFieldAsyncStatus().equals("Job Skipped")) {
                         jobStatus = "skipped";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Skipped\"");
                     }
-                    if (adReportRun.getFieldAsyncStatus().equals("Job Failed")) {
+                    if (currentReport.getFieldAsyncStatus().equals("Job Failed")) {
                         jobStatus = "failed";
                         throw new RuntimeException("async was aborted because the AsyncStatus is \"Job Failed\"");
                     }
@@ -89,19 +88,20 @@ public class Client
                 throw new APIException(e);
             }
         }
-        if (adReportRun == null || adReportRun.getFieldAsyncPercentCompletion() != 100) {
+        AdReportRun finalReport = fetchAdReportRunSafely(adReportRun.getId());
+        if (adReportRun == null || finalReport.getFieldAsyncPercentCompletion() != 100) {
             throw new APIException();
         }
-        logger.info(adReportRun.getRawResponse());
 
         // extra waiting
         int retryCount = 0;
         boolean succeeded = false;
         APINodeList<AdsInsights> adsInsights = null;
+        AdReportRun latestReport = fetchAdReportRunSafely(adReportRun.getId());
         while (retryCount < pluginTask.getMaxWaitSeconds() && !succeeded) {
             try {
                 Thread.sleep(1000);
-                adsInsights = adReportRun.getInsights().execute();
+                adsInsights = latestReport.getInsights().execute();
                 succeeded = true;
             }
             catch (APIException e) {
@@ -331,5 +331,18 @@ public class Client
     private List<String> fieldNames()
     {
         return pluginTask.getFields().getColumns().stream().map(ColumnConfig::getName).filter(s -> !Breakdown.NAMES.contains(s)).collect(Collectors.toList());
+    }
+
+    private AdReportRun fetchAdReportRunSafely(String reportRunId) {
+        try {
+            return new AdReportRun(reportRunId, apiContext())
+                .get()
+                .requestAsyncPercentCompletionField()
+                .requestAsyncStatusField()
+                .execute();
+        } catch (Exception e) {
+            logger.error("Failed to fetch AdReportRun with ID: {}", reportRunId, e);
+            throw new RuntimeException("AdReportRun fetch failed for ID: " + reportRunId, e);
+        }
     }
 }
