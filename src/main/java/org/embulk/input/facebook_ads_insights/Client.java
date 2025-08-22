@@ -337,23 +337,8 @@ public class Client
         try {
             return new AdReportRun(reportRunId, apiContext())
                 .get()
-                .requestAccountIdField()
                 .requestAsyncPercentCompletionField()
                 .requestAsyncStatusField()
-                .requestDateStartField()
-                .requestDateStopField()
-                .requestEmailsField()
-                .requestFriendlyNameField()
-                .requestIdField()
-                .requestIsBookmarkedField()
-                .requestIsRunningField()
-                .requestScheduleIdField()
-                .requestTimeCompletedField()
-                .requestTimeRefField()
-                // v23.0で権限エラーを起こすフィールドを明示的に除外する
-                .requestAsyncReportUrlField(false)
-                .requestErrorCodeField(false)
-                .requestIsAsyncExportField(false)
                 .execute();
         } catch (Exception e) {
             logger.error("Failed to fetch AdReportRun with ID: {}", reportRunId, e);
