@@ -2,12 +2,15 @@ package org.embulk.input.facebook_ads_insights;
 
 import static org.junit.Assert.*;
 
+import com.facebook.ads.sdk.AdsInsights;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import org.embulk.config.ConfigException;
 import org.embulk.config.ConfigLoader;
 import org.embulk.config.ConfigSource;
+import org.embulk.input.facebook_ads_insights.model.Breakdown;
 import org.embulk.input.facebook_ads_insights.model.ObjectType;
 import org.embulk.input.facebook_ads_insights.unit.ToStringMap;
 import org.embulk.spi.type.Type;
@@ -83,6 +86,92 @@ public class TestConfig {
         assertEquals(pluginTask.getUseUnifiedAttributionSetting().get(), false);
         assertEquals(pluginTask.getMaxWaitSeconds().longValue(), 100L);
         assertEquals(pluginTask.getEnableDebug(), true);
+    }
+
+    @Test
+    public void testAllActionAttributionWindows() throws IOException {
+        // facebook-java-business-sdk がサポートする全アトリビューションウィンドウ値が
+        // ConfigException を投げずにパースできることを確認する。
+        PluginTask pluginTask = getPluginTask("attribution_windows.yml");
+        assertEnumListEquals(
+                pluginTask.getActionAttributionWindows(),
+                "1d_view", "7d_view", "28d_view", "1d_click", "7d_click", "28d_click",
+                "1d_ev", "7d_view_all_conversions", "7d_view_first_conversion",
+                "28d_view_all_conversions", "28d_view_first_conversion", "dda", "default",
+                "skan_view", "skan_view_second_postback", "skan_view_third_postback",
+                "skan_click", "skan_click_second_postback", "skan_click_third_postback");
+    }
+
+    @Test
+    public void testUnknownActionAttributionWindow() {
+        try {
+            getPluginTask("invalid_attribution_window.yml");
+            fail("Expected an exception for an unknown ActionAttributionWindow value");
+        } catch (Exception e) {
+            assertTrue(collectMessages(e).contains("Unknown ActionAttributionWindow value 'unknown_window'"));
+        }
+    }
+
+    @Test
+    public void testAllActionBreakdowns() throws IOException {
+        // facebook-java-business-sdk がサポートする全 action_breakdown 値が
+        // ConfigException を投げずにパースできることを確認する。
+        PluginTask pluginTask = getPluginTask("action_breakdowns.yml");
+        assertEnumListEquals(
+                pluginTask.getActionBreakdowns(),
+                "action_canvas_component_name", "action_carousel_card_id", "action_carousel_card_name",
+                "action_destination", "action_device", "action_reaction", "action_target_id",
+                "action_type", "action_video_sound", "action_video_type", "conversion_destination",
+                "is_business_ai_assisted", "matched_persona_id", "matched_persona_name",
+                "signal_source_bucket", "standard_event_content_type");
+    }
+
+    @Test
+    public void testUnknownActionBreakdown() {
+        try {
+            getPluginTask("invalid_action_breakdown.yml");
+            fail("Expected an exception for an unknown ActionBreakdown value");
+        } catch (Exception e) {
+            assertTrue(collectMessages(e).contains("Unknown ActionBreakdown value 'unknown_breakdown'"));
+        }
+    }
+
+    @Test
+    public void testBreakdownsIncludingNewSdkValues() throws IOException {
+        // 2019 当時の 22 値に無かった新しい breakdown も config 経由でパースできることを確認する。
+        PluginTask pluginTask = getPluginTask("breakdowns_new.yml");
+        assertEnumListEquals(pluginTask.getBreakdowns(), "age", "app_id", "comscore_market");
+    }
+
+    @Test
+    public void testBreakdownNamesCoverAllSdkValues() {
+        // fromString と NAMES はどちらも SDK enum から導出しており、Client#fieldNames() の
+        // breakdown/field 仕分けが常に整合すること（両者が同じ値集合を覆うこと）を担保する。
+        assertEquals(AdsInsights.EnumBreakdowns.values().length, Breakdown.NAMES.size());
+        for (AdsInsights.EnumBreakdowns breakdown : AdsInsights.EnumBreakdowns.values()) {
+            assertTrue(Breakdown.NAMES.contains(breakdown.toString()));
+            assertEquals(breakdown.toString(), Breakdown.fromString(breakdown.toString()).toString());
+        }
+    }
+
+    @Test
+    public void testUnknownBreakdown() {
+        try {
+            Breakdown.fromString("unknown_breakdown");
+            fail("Expected an exception for an unknown Breakdown value");
+        } catch (ConfigException e) {
+            assertTrue(e.getMessage().contains("Unknown Breakdown value 'unknown_breakdown'"));
+        }
+    }
+
+    private String collectMessages(Throwable t) {
+        StringBuilder sb = new StringBuilder();
+        for (Throwable c = t; c != null; c = c.getCause()) {
+            if (c.getMessage() != null) {
+                sb.append(c.getMessage()).append('\n');
+            }
+        }
+        return sb.toString();
     }
 
     @SafeVarargs

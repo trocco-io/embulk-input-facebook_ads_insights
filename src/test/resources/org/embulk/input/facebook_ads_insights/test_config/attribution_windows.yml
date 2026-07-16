@@ -1,0 +1,27 @@
+type: facebook_ads_insights
+access_token: "aw_at"
+object_type: account
+object_id: "1"
+fields:
+  - name: account_id
+    type: string
+action_attribution_windows:
+  - 1d_view
+  - 7d_view
+  - 28d_view
+  - 1d_click
+  - 7d_click
+  - 28d_click
+  - 1d_ev
+  - 7d_view_all_conversions
+  - 7d_view_first_conversion
+  - 28d_view_all_conversions
+  - 28d_view_first_conversion
+  - dda
+  - default
+  - skan_view
+  - skan_view_second_postback
+  - skan_view_third_postback
+  - skan_click
+  - skan_click_second_postback
+  - skan_click_third_postback

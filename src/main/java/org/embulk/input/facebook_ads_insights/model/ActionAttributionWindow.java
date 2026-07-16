@@ -24,16 +24,12 @@ public class ActionAttributionWindow
     @JsonCreator
     public static ActionAttributionWindow fromString(final String value)
     {
-        switch (value) {
-            case "1d_click": return new ActionAttributionWindow(AdsInsights.EnumActionAttributionWindows.VALUE_1D_CLICK);
-            case "1d_view": return new ActionAttributionWindow(AdsInsights.EnumActionAttributionWindows.VALUE_1D_VIEW);
-            case "7d_click": return new ActionAttributionWindow(AdsInsights.EnumActionAttributionWindows.VALUE_7D_CLICK);
-            case "7d_view": return new ActionAttributionWindow(AdsInsights.EnumActionAttributionWindows.VALUE_7D_VIEW);
-            case "28d_click": return new ActionAttributionWindow(AdsInsights.EnumActionAttributionWindows.VALUE_28D_CLICK);
-            case "28d_view": return new ActionAttributionWindow(AdsInsights.EnumActionAttributionWindows.VALUE_28D_VIEW);
-            case "default": return new ActionAttributionWindow(AdsInsights.EnumActionAttributionWindows.VALUE_DEFAULT);
-            default: throw new ConfigException(String.format("Unknown ActionAttributionWindow value '%s'", value));
+        for (AdsInsights.EnumActionAttributionWindows window : AdsInsights.EnumActionAttributionWindows.values()) {
+            if (window.toString().equals(value)) {
+                return new ActionAttributionWindow(window);
+            }
         }
+        throw new ConfigException(String.format("Unknown ActionAttributionWindow value '%s'", value));
     }
 
     public AdsInsights.EnumActionAttributionWindows getEnum()
