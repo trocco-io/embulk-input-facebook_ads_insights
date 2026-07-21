@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import org.embulk.config.ConfigException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +15,10 @@ public class Breakdown
     // Derive from the SDK enum so this list stays in sync with fromString() (and with the
     // SDK across version bumps). NAMES is also used by Client#fieldNames() to tell breakdown
     // columns apart from field columns, so the two must always cover the same set of values.
-    public static final List<String> NAMES = Arrays.stream(AdsInsights.EnumBreakdowns.values())
-            .map(Object::toString)
-            .collect(Collectors.toList());
+    public static final List<String> NAMES = Collections.unmodifiableList(
+            Arrays.stream(AdsInsights.EnumBreakdowns.values())
+                    .map(Object::toString)
+                    .collect(Collectors.toList()));
     private final AdsInsights.EnumBreakdowns enumBreakdowns;
 
     private Breakdown(final AdsInsights.EnumBreakdowns enumBreakdowns)

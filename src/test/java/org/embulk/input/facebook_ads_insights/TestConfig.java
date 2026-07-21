@@ -138,7 +138,8 @@ public class TestConfig {
 
     @Test
     public void testBreakdownsIncludingNewSdkValues() throws IOException {
-        // 2019 当時の 22 値に無かった新しい breakdown も config 経由でパースできることを確認する。
+        // 旧ハードコード 22 値には無かった breakdown が config 経由で受理されることの spot check。
+        // 全 SDK 値の受理自体は testBreakdownNamesCoverAllSdkValues が fromString で網羅している。
         PluginTask pluginTask = getPluginTask("breakdowns_new.yml");
         assertEnumListEquals(pluginTask.getBreakdowns(), "age", "app_id", "comscore_market");
     }
