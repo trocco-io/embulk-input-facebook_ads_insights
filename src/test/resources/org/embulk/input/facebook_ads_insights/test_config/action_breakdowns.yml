@@ -1,0 +1,24 @@
+type: facebook_ads_insights
+access_token: "ab_at"
+object_type: account
+object_id: "1"
+fields:
+  - name: account_id
+    type: string
+action_breakdowns:
+  - action_canvas_component_name
+  - action_carousel_card_id
+  - action_carousel_card_name
+  - action_destination
+  - action_device
+  - action_reaction
+  - action_target_id
+  - action_type
+  - action_video_sound
+  - action_video_type
+  - conversion_destination
+  - is_business_ai_assisted
+  - matched_persona_id
+  - matched_persona_name
+  - signal_source_bucket
+  - standard_event_content_type

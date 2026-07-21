@@ -1,0 +1,11 @@
+type: facebook_ads_insights
+access_token: "bd_at"
+object_type: account
+object_id: "1"
+fields:
+  - name: account_id
+    type: string
+breakdowns:
+  - age
+  - app_id
+  - comscore_market
